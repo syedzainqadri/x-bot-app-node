@@ -8,10 +8,22 @@ app.use(express.json());
 // Endpoint to create a new post
 app.post('/posts', async (req, res) => {
     try {
-        const { botId } = req.body; // Add other fields as per your model
+        const { botId,
+            platformName,
+            raidLink ,
+            url ,
+            content ,
+            tag ,
+            uploadedIMGURL } = req.body; // Add other fields as per your model
         const newPost = await prisma.post.create({
             data: {
                 botId,
+                platformName,
+                raidLink,
+                url,
+                content,
+                tag,
+                uploadedIMGURL
             },
         });
         res.json(newPost);

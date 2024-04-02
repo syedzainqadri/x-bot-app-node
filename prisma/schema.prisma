@@ -13,15 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  uid String
-  email String  @unique
-  displayName  String?
-  password     String?
-  allpostslist String
-}
+
 model Post {
   postId    Int     @id @default(autoincrement())
   botId     Int
+  platformName String
+  raidLink String
+  url String
+  content String
+  tag String
+  uploadedIMGURL String
 }
