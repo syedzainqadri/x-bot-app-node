@@ -1,20 +1,16 @@
 const express = require('express');
+const cors = require('cors'); // Import cors module
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
+app.use(cors()); 
 
 // Endpoint to create a new post
-app.post('/posts', async (req, res) => {
+app.post('/posts', cors(), async (req, res) => {
     try {
-        const { botId,
-            platformName,
-            raidLink ,
-            url ,
-            content ,
-            tag ,
-            uploadedIMGURL } = req.body; // Add other fields as per your model
+        const { botId, platformName, raidLink, url, content, tag, uploadedIMGURL } = req.body;
         const newPost = await prisma.post.create({
             data: {
                 botId,
@@ -32,10 +28,8 @@ app.post('/posts', async (req, res) => {
     }
 });
 
-
-
-
-app.get('/posts', async (req, res) => {
+// Endpoint to get all posts
+app.get('/getallposts', cors(), async (req, res) => {
     try {
         const posts = await prisma.post.findMany();
         res.json(posts);
