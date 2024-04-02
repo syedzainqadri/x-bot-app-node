@@ -11,7 +11,8 @@
   "dependencies": {
     "@prisma/client": "^5.12.0",
     "express": "^4.19.2",
-    "firebase": "^10.10.0"
+    "firebase": "^10.10.0",
+    "fs": "^0.0.1-security"
   },
   "devDependencies": {
     "prisma": "^5.12.0"

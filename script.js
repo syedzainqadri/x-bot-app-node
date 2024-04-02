@@ -1,26 +1,23 @@
-import { PrismaClient } from '@prisma/client'
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-const prisma = new PrismaClient()
-
-async function main(
-    username,
-    password
-) {
-  const user = await prisma.user.create({
-    data: {
-      name: username,
-      email: password,
-    },
-  })
-  console.log(user)
+async function main(uid,email,displayName,password,allpostslist) {
+    const newUser = await prisma.user.create({
+        data: {
+            uid: uid,
+            email: email,
+            displayName: displayName,
+            password: password,
+            allpostslist: allpostslist,
+        },
+    });
+    console.log('New User:', newUser);
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect()
+  .catch(e => {
+    throw e
   })
-  .catch(async (e) => {
-    console.error(e)
+  .finally(async () => {
     await prisma.$disconnect()
-    process.exit(1)
-  })
+  });
