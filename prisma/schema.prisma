@@ -17,6 +17,7 @@ datasource db {
 model Post {
   postId    Int     @id @default(autoincrement())
   botId     Int
+  currentDate   Int
   platformName String
   raidLink String
   url String

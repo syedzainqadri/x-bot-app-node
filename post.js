@@ -33,7 +33,7 @@ app.post('/posts', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
+// return all data from db 
 app.get('/posts', async (req, res) => {
     try {
         const posts = await prisma.post.findMany();
@@ -42,6 +42,7 @@ app.get('/posts', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+// get data by botID
 app.get('/posts/by-bot/:botId', async (req, res) => {
     try {
         const botId = parseInt(req.params.botId);
@@ -59,6 +60,8 @@ app.get('/posts/by-bot/:botId', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+
+// bulk data insert in to DB
 app.post('/manyposts', async (req, res) => {
     try {
         const postData = req.body;
