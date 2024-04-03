@@ -1,20 +1,26 @@
 const express = require('express');
-const cors = require('cors'); // Import cors module
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
-app.use(cors()); 
 
 // Endpoint to create a new post
-app.post('/posts', cors(), async (req, res) => {
+app.post('/posts', async (req, res) => {
     try {
-        const { botId, platformName, raidLink, url, content, tag, uploadedIMGURL } = req.body;
+        const { botId,
+            platformName,
+            currentDate,
+            raidLink ,
+            url ,
+            content ,
+            tag ,
+            uploadedIMGURL } = req.body; // Add other fields as per your model
         const newPost = await prisma.post.create({
             data: {
                 botId,
                 platformName,
+                currentDate,
                 raidLink,
                 url,
                 content,
@@ -28,7 +34,6 @@ app.post('/posts', cors(), async (req, res) => {
     }
 });
 
-// get post all
 app.get('/posts', async (req, res) => {
     try {
         const posts = await prisma.post.findMany();
@@ -37,8 +42,6 @@ app.get('/posts', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
-// get post by id
 app.get('/posts/by-bot/:botId', async (req, res) => {
     try {
         const botId = parseInt(req.params.botId);
@@ -56,8 +59,6 @@ app.get('/posts/by-bot/:botId', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
-// get post by id
 app.post('/manyposts', async (req, res) => {
     try {
         const postData = req.body;
@@ -68,6 +69,7 @@ app.post('/manyposts', async (req, res) => {
             const postsData = postData.map(post => ({
                 botId: post.botId,
                 platformName: post.platformName,
+                currentDate : post.currentDate,
                 raidLink: post.raidLink,
                 url: post.url,
                 content: post.content,
@@ -80,9 +82,9 @@ app.post('/manyposts', async (req, res) => {
             );
         } else {
             // If postData is a single object, process it directly
-            const { botId, platformName, raidLink, url, content, tag, uploadedIMGURL } = postData;
+            const { botId, platformName,currentDate, raidLink, url, content, tag, uploadedIMGURL } = postData;
             newPosts = await prisma.post.create({
-                data: { botId, platformName, raidLink, url, content, tag, uploadedIMGURL },
+                data: { botId, platformName,currentDate, raidLink, url, content, tag, uploadedIMGURL },
             });
         }
 
