@@ -1,21 +1,16 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const cors = require('cors');
 
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // Endpoint to create a new post
 app.post('/posts', async (req, res) => {
     try {
-        const { botId,
-            platformName,
-            currentDate,
-            raidLink ,
-            url ,
-            content ,
-            tag ,
-            uploadedIMGURL } = req.body; // Add other fields as per your model
+        const { botId, platformName, currentDate, raidLink, url, content, tag, uploadedIMGURL } = req.body; // Add other fields as per your model
         const newPost = await prisma.post.create({
             data: {
                 botId,
@@ -33,6 +28,7 @@ app.post('/posts', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+
 // return all data from db 
 app.get('/posts', async (req, res) => {
     try {
@@ -42,6 +38,7 @@ app.get('/posts', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+
 // get data by botID
 app.get('/posts/by-bot/:botId', async (req, res) => {
     try {
@@ -61,10 +58,16 @@ app.get('/posts/by-bot/:botId', async (req, res) => {
     }
 });
 
-// bulk data insert in to DB
+// bulk data insert into DB
 app.post('/manyposts', async (req, res) => {
     try {
         const postData = req.body;
+
+        if (!postData) {
+            // If no data is provided in the request body, respond with status 400
+            return res.status(400).json({ error: "No data provided" });
+        }
+
         let newPosts;
 
         if (Array.isArray(postData)) {
@@ -72,7 +75,7 @@ app.post('/manyposts', async (req, res) => {
             const postsData = postData.map(post => ({
                 botId: post.botId,
                 platformName: post.platformName,
-                currentDate : post.currentDate,
+                currentDate: post.currentDate,
                 raidLink: post.raidLink,
                 url: post.url,
                 content: post.content,
@@ -85,15 +88,21 @@ app.post('/manyposts', async (req, res) => {
             );
         } else {
             // If postData is a single object, process it directly
-            const { botId, platformName,currentDate, raidLink, url, content, tag, uploadedIMGURL } = postData;
+            const { botId, platformName, currentDate, raidLink, url, content, tag, uploadedIMGURL } = postData;
             newPosts = await prisma.post.create({
-                data: { botId, platformName,currentDate, raidLink, url, content, tag, uploadedIMGURL },
+                data: { botId, platformName, currentDate, raidLink, url, content, tag, uploadedIMGURL },
             });
         }
 
-        res.json(newPosts);
+        // Respond with status 200 and the created posts
+        res.status(200).json(newPosts);
+        console.log("newpost" , newPosts);
     } catch (error) {
-        res.status(500).send(error.message);
+        // Log internal server error to console
+        console.error("Internal Server Error:", error);
+    
+        // Respond with status 500 and an error message
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
