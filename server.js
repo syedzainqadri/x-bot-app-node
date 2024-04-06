@@ -7,6 +7,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.post('/', async (req, res) => {
+    console.log("Hello Server is runing")
+});
+
 // Endpoint to create a new post
 app.post('/posts', async (req, res) => {
     try {
@@ -107,7 +111,7 @@ app.post('/manyposts', async (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
