@@ -12,7 +12,13 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
+model User {
+  userId       Int       @id @default(autoincrement())
+  email        String    @unique
+  displayName  String
+  password     String
+  posts        Post[]    @relation("UserPosts")
+}
 
 model Post {
   postId    Int     @id @default(autoincrement())
@@ -25,3 +31,4 @@ model Post {
   tag String
   uploadedIMGURL String
 }
+
